@@ -1,15 +1,1 @@
-WWWWWWWWWWWWWWWWWWWW
-D        PP        S
-D     PP           S 
-D  PP   W  WwWWWWWWW
-D    W             D
-DDDP               D
-D   P    PP    PP  D
-D  P               D
-DDDDD  WW  WWWW  DDD
-D                  D
-D                  D
-D               DDDD
-D                  D
-D                  D
-DWWWWWWWWWWWWWWWWWWD
+
