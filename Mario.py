@@ -6,17 +6,20 @@ TILESIZE = 35
 MAP_WIDTH, MAP_HEIGHT = 35,20
 WIDTH, HEIGHT = TILESIZE*MAP_WIDTH, TILESIZE*MAP_HEIGHT
 FPS = 120
+bg_color= (3, 73, 252)
 font1 = font.SysFont("ProtestRevolution-Regular.ttf", 40)
 font2 = font.SysFont("ProtestRevolution-Regular.ttf", 55)
 
 window = display.set_mode((WIDTH, HEIGHT)) #створюємо вікно 
 display.set_caption("Mario")
 clock = time.Clock() # Створюємо ігровий таймер
-
+player1_img = image.load("player/player_01.png")
 platform1_img= image.load("platform/platform_01.png")
 platform2_img= image.load("platform/platform_02.png")
 platform3_img= image.load("platform/platform_88.png")
-platform4_img= image.load("platform\platform_11.png")
+platform4_img= image.load("platform/platform_11.png")
+platform5_img= image.load("platform/platform_57.png")
+platform6_img= image.load("platform/platform_56.png")
 point1_img = image.load ("point/point_01.png")
 
 
@@ -63,14 +66,17 @@ class Player(GameSprite):
            
 platforms = sprite.Group()
 enemys = sprite.Group()
-
+player = Player(player1_img,TILESIZE+20, TILESIZE, 0,0)
 
 class Platform(GameSprite):
     def __init__(self, platform_img, x, y):
         super().__init__(platform_img,TILESIZE, TILESIZE, x, y)
         platforms.add(self)
 
-with open("Map.txt", "r") as file:
+map = 1
+with open(f"Map{map}.txt", "r") as file:
+    if map == 2:
+        bg_color = (7, 36, 82)
     x, y = TILESIZE/2, TILESIZE/2
     map = file.readlines()
     for row in map:
@@ -83,13 +89,17 @@ with open("Map.txt", "r") as file:
                 Platform(platform3_img, x,y)
             elif symbol == 'K':
                 Platform(platform4_img, x,y)
-            elif symbol == 'P':
+            elif symbol == 'M':
+                Platform(platform5_img, x,y)
+            elif symbol == 'N':
+                Platform(platform6_img, x,y)
+            elif symbol == 'C':
                 GameSprite(point1_img, TILESIZE-5, TILESIZE-5, x,y)
                 
-            # elif symbol == 'P':
-            #     player.rect.x = x
-            #     player.rect.y = y
-            #     player.start_x, player.start_y = x, y
+            elif symbol == 'P':
+                player.rect.centerx = x
+                player.rect.centery = y
+                player.start_x, player.start_y = x, y
             # elif symbol == 'T':
             #     treasure = GameSprite(point_img, TILESIZE, TILESIZE, x ,y)
             x += TILESIZE
@@ -102,9 +112,9 @@ while True:
     for e in event.get():
         if e.type == QUIT:
             quit()
-   
-    window.fill((3, 73, 252))
+    
+    window.fill(bg_color)
     sprites.draw(window)
-   
+    sprites.update()
     display.update()
     clock.tick(FPS)
