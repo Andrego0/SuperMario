@@ -2,7 +2,7 @@ from pygame import *
 mixer.init()
 font.init()
 #створи вікно гри
-TILESIZE = 30
+TILESIZE = 35
 MAP_WIDTH, MAP_HEIGHT = 35,20
 WIDTH, HEIGHT = TILESIZE*MAP_WIDTH, TILESIZE*MAP_HEIGHT
 FPS = 120
@@ -16,6 +16,7 @@ clock = time.Clock() # Створюємо ігровий таймер
 platform1_img= image.load("platform/platform_01.png")
 platform2_img= image.load("platform/platform_02.png")
 platform3_img= image.load("platform/platform_88.png")
+platform4_img= image.load("platform\platform_11.png")
 point1_img = image.load ("point/point_01.png")
 
 
@@ -80,8 +81,11 @@ with open("Map.txt", "r") as file:
                 Platform(platform1_img, x,y)
             elif symbol == 'S':
                 Platform(platform3_img, x,y)
+            elif symbol == 'K':
+                Platform(platform4_img, x,y)
             elif symbol == 'P':
                 GameSprite(point1_img, TILESIZE-5, TILESIZE-5, x,y)
+                
             # elif symbol == 'P':
             #     player.rect.x = x
             #     player.rect.y = y
