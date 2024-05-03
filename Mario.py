@@ -46,24 +46,40 @@ class Player(GameSprite):
         self.hp = 100
         self.damage = 20
         self.coins = 0
-        self.speed = 3
+        self.speed_x = 3
+        self.speed_y = 0
+        self.on_ground = True
+        self.jump_height = 70
+    
 
     def update(self):
         global hp_text
         self.old_pos = self.rect.x, self.rect.y
 
         keys = key.get_pressed() #отримуємо список натиснутих клавіш
-        if keys[K_w] and self.rect.y > 0:
-            self.rect.y -= self.speed
+        if keys[K_SPACE] and self.rect.y > 0 and self.on_ground: 
+            self.rect.y -= self.jump_height
+            self.on_ground = False
+            self.speed_y = 0
             
-        
            
         if keys[K_a] and self.rect.left > 0:
-            self.rect.x -= self.speed
+            self.rect.x -= self.speed_x
            
         if keys[K_d] and self.rect.right < WIDTH    :
-            self.rect.x += self.speed
+            self.rect.x += self.speed_x
            
+        if not self.on_ground:
+            self.speed_y += 0.25
+            self.rect.y += self.speed_y
+
+        collide_list = sprite.spritecollide(self, platforms, False)
+        for platform in collide_list: 
+            self.on_ground = True
+            # self.rect.bottom = platform.rect.top
+        if len(collide_list) == 0:
+            self.on_ground = False
+
 platforms = sprite.Group()
 enemys = sprite.Group()
 player = Player(player1_img,TILESIZE+20, TILESIZE, 0,0)
