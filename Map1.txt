@@ -1,20 +1,19 @@
-DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+D                                 S
 D              C   CC   CC        S
 D                K    K    K      S
-D            DD DDD  DDD  DDDDDDDDD
+D           DDD DDD  DDD  DDDDDDDDD
 D   DD  DD                        D
 D                                 D
-DD      CC              CC    KKKCD
-D   DD      CC   DD  D  DD  DDDDDDD
+DD      CC              CC      KCD
+D   DD      CC          DD  DDDDDDD
 D       DD                        D
-D           DD     K              D
-D               DDDDDD            D
+D           DD  DDDDDD            D
 D                                 D
 D             CC        DDDDDDDDDDD
-D             KK    DD            D
-D           DDDDDD                D
+D            K  K                 D
+D           DDDDDD  DDD           D
 D         D                       D
 D       D                         D
 D  C  D                           D
-DP K  KKKKKKKKKKKKKKKKKKKKKKKKKKKKD
+DP    KKKKKKKKKKKKKKKKKKKKKKKKKKKKD
 DWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWD

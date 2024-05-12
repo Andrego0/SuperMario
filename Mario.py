@@ -46,10 +46,10 @@ class Player(GameSprite):
         self.hp = 100
         self.damage = 20
         self.coins = 0
-        self.speed_x = 3
+        self.speed_x = 4
         self.speed_y = 0
         self.on_ground = True
-        self.jump_height = 70
+        self.jump_height = 100
     
 
     def update(self):
@@ -58,37 +58,53 @@ class Player(GameSprite):
 
         keys = key.get_pressed() #отримуємо список натиснутих клавіш
         if keys[K_SPACE] and self.rect.y > 0 and self.on_ground: 
-            self.rect.y -= self.jump_height
+            
             self.on_ground = False
             self.speed_y = 0
+            if self.rect.y > 0:
+                self.rect.y -= self.jump_height
+                
             
            
-        if keys[K_a] and self.rect.left > 0:
+        if keys[K_a] and self.rect.left > 40:
             self.rect.x -= self.speed_x
            
-        if keys[K_d] and self.rect.right < WIDTH    :
+        if keys[K_d] and self.rect.right < WIDTH:
             self.rect.x += self.speed_x
            
         if not self.on_ground:
             self.speed_y += 0.25
             self.rect.y += self.speed_y
 
-        collide_list = sprite.spritecollide(self, platforms, False)
+        collide_list = sprite.spritecollide(self, platforms, False, sprite.collide_mask)
         for platform in collide_list: 
-            self.on_ground = True
-            # self.rect.bottom = platform.rect.top
+            if self.speed_y > 0 and abs(platform.rect.top - self.rect.bottom) <= 10  :
+                self.on_ground = True
+                self.speed_y = 0
+                self.rect.bottom = platform.rect.top
+            elif abs(platform.rect.right - self.rect.left) <= 5:
+                self.speed_x = 0
+                self.rect.left = platform.rect.right
+            elif  abs(platform.rect.left - self.rect.right) <= 5:
+                self.speed_x = 0
+                self.rect.right = platform.rect.left
+
         if len(collide_list) == 0:
             self.on_ground = False
 
 platforms = sprite.Group()
 enemys = sprite.Group()
 player = Player(player1_img,TILESIZE+20, TILESIZE, 0,0)
+koluchki_group = sprite.Group()
+points_group = sprite.Group()
 
 class Platform(GameSprite):
     def __init__(self, platform_img, x, y):
         super().__init__(platform_img,TILESIZE, TILESIZE, x, y)
         platforms.add(self)
 
+
+finish_block = Platform(platform3_img, 0, 0)
 map = 1
 with open(f"Map{map}.txt", "r") as file:
     if map == 2:
@@ -102,15 +118,16 @@ with open(f"Map{map}.txt", "r") as file:
             elif symbol == 'D':
                 Platform(platform1_img, x,y)
             elif symbol == 'S':
-                Platform(platform3_img, x,y)
+                finish_block= Platform(platform3_img, x,y)
             elif symbol == 'K':
-                Platform(platform4_img, x,y)
+                koluchki_group.add (GameSprite(platform4_img, TILESIZE-5, TILESIZE-5, x,y))
             elif symbol == 'M':
                 Platform(platform5_img, x,y)
             elif symbol == 'N':
                 Platform(platform6_img, x,y)
             elif symbol == 'C':
-                GameSprite(point1_img, TILESIZE-5, TILESIZE-5, x,y)
+                points_group.add (GameSprite(point1_img, TILESIZE-5, TILESIZE-5, x,y))
+
                 
             elif symbol == 'P':
                 player.rect.centerx = x
@@ -121,16 +138,28 @@ with open(f"Map{map}.txt", "r") as file:
             x += TILESIZE
         y+=TILESIZE
         x = TILESIZE/2
-
+ 
+finish = False
+hp_text = font1.render(f"HP: {player.hp}", True, (255, 255, 255))
+finish_text = font2.render("GAME OVER", True, (255, 0, 0))
 
 while True:
     #оброби подію «клік за кнопкою "Закрити вікно"
     for e in event.get():
         if e.type == QUIT:
             quit()
-    
+    collide_list = sprite.spritecollide(player, points_group, True, sprite.collide_mask)
+    collide_list = sprite.spritecollide(player, koluchki_group, False, sprite.collide_mask)
+    if len (collide_list) > 0:
+        finish = True
+    if sprite.collide_mask(finish_block, player):
+        finish =True
+        finish_text = font2.render("You WON!", True, (255, 0, 0))
     window.fill(bg_color)
     sprites.draw(window)
-    sprites.update()
+    if not finish:
+        sprites.update()
+    if finish:
+        window.blit (finish_text, (500, 300))
     display.update()
     clock.tick(FPS)
